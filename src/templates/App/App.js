@@ -23,7 +23,7 @@ function App() {
 
         <Routes>
 
-          <Route path='/segment' element={ <HomeTemp /> } />
+          <Route path='/' element={ <HomeTemp /> } />
 
         </Routes>
 
