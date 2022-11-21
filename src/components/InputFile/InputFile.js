@@ -1,43 +1,75 @@
 import './InputFile.css'
 
 // React imports.
-import React, { useState } from 'react'
+import React from 'react'
 
 
 
-export default function InputFile(){
+
+
+
+export default class InputFile extends React.Component {
     
-    const [fileLoad, setFileLoad] = useState(false)
-    const [file, setFile] = useState()
+    constructor(props) {
 
-    function handleSelectFile(e) {
-        
-        setFileLoad(true)
+        super(props);
+        this.video = React.createRef();
 
-        const videoObject = e.target.files[0]
-        console.log(URL.createObjectURL(videoObject))
+        this.state = {
+            fileLoad: false,
+            videoObject: null
 
+        }
+
+    }
+    
+    handleSelectFile = (e) => {
         // TODO: Hacer que se pueda cambiar de archivo.
-        setFile(URL.createObjectURL(videoObject))
+        const videoObject = e.target.files[0];
+        console.log(this.state.fileLoad)
+
+        this.setState({
+            fileLoad: true,
+            videoObject: URL.createObjectURL(videoObject)
+        }, () => {
+            console.log(this.state.fileLoad)
+        })
+
+    }  
+    
+
+    onPause = (e) => {
+        this.video.current.play()
     }
 
-    return(
-        <div className="InputFile">
-            <form>
+    render() {
+        return(
+            <div className="InputFile">
+                <form>
 
-                <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={handleSelectFile} accept='video/mp4, audio/mp3' />
+                    <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
 
-            </form>
+                </form>
 
-            {fileLoad && (
-                <video width='500' controls >
+                {this.state.fileLoad && (
+                    <div className="video_div">
+                        
+                        <div className="video_frame">
+                                
+                            <video width='500' controls ref={this.video} >
 
-                    <source src={file} />
+                                <source src={this.state.fileVideo} />
 
-                </video>
-            )}
+                            </video>
+
+                            <button onClick={this.onPause}>Pause</button>
+                        </div>
+
+                    </div>
+                )}
 
 
-        </div>
-    )
+            </div>
+        )
+    }
 }
