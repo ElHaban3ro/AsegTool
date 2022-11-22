@@ -98,6 +98,21 @@ export default class InputFile extends React.Component {
 
     HandlerVideoTimeLine = (e) => {
         this.video.current.currentTime = e.target.value
+
+        var date = new Date(null)
+        date.setSeconds(Math.ceil(e.target.value) - 1)
+        var formatCurrentTime = date.toISOString().substr(11, 8)
+        if (formatCurrentTime === '23:59:59'){
+            this.setState({
+                currentTime: '00:00:00',
+                currentSeconds: 0
+            })
+        } else {
+            this.setState({
+                currentTime: formatCurrentTime,
+                currentSeconds: Math.ceil(e.target.value) - 1,
+            })
+        }
     }
 
 
