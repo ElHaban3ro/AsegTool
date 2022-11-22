@@ -14,33 +14,71 @@ export default class InputFile extends React.Component {
 
         super(props);
         this.video = React.createRef();
-
+        
         this.state = {
             fileLoad: false,
-            videoObject: null
-
+            videoObject: null,
+            runningVideo: false,
+            pauseImage: "https://www.pngarts.com/files/2/Play-PNG-Download-Image.png",
+            currentTime: '00:00:00',
+            totalTime: '00:00:00'
         }
-
+        
     }
     
     handleSelectFile = (e) => {
         // TODO: Hacer que se pueda cambiar de archivo.
         const videoObject = e.target.files[0];
-        console.log(this.state.fileLoad)
 
         this.setState({
             fileLoad: true,
             videoObject: URL.createObjectURL(videoObject)
-        }, () => {
-            console.log(this.state.fileLoad)
         })
 
     }  
     
-
+    
     onPause = (e) => {
-        this.video.current.play()
+        if (this.state.runningVideo === false){
+            
+            this.video.current.play()
+            this.setState({
+                runningVideo: true,
+                pauseImage: "https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-pause-512.png"
+            })
+            
+        } else {
+            
+            this.video.current.pause()
+            this.setState({
+                runningVideo: false,
+                pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
+            })
+            
+        }
+        
     }
+
+
+    HandlerVideo = (e) => {
+
+        var date = new Date(null)
+        date.setSeconds(Math.ceil(this.video.current.currentTime) - 1)
+        var formatCurrentTime = date.toISOString().substr(11, 8)
+        if (formatCurrentTime === '23:59:59'){
+            this.setState({currentTime: '00:00:00'})
+        } else {
+            this.setState({currentTime: formatCurrentTime})
+        }
+
+
+            
+        var date = new Date(null)
+        date.setSeconds(Math.ceil(this.video.current.duration) - 1)
+        var formatTotalTime = date.toISOString().substr(11, 8)
+        this.setState({totalTime: formatTotalTime})
+    }
+
 
     render() {
         return(
@@ -56,13 +94,20 @@ export default class InputFile extends React.Component {
                         
                         <div className="video_frame">
                                 
-                            <video width='500' controls ref={this.video} >
+                            <video width='500'  ref={this.video} onTimeUpdate={this.HandlerVideo} >
 
-                                <source src={this.state.fileVideo} />
+                                <source src={this.state.videoObject} />
 
                             </video>
 
-                            <button onClick={this.onPause}>Pause</button>
+                            <div className="buttons_div">
+
+                                <p className="cTimeTTime">{this.state.currentTime}/{this.state.totalTime}</p>
+
+                                <a onClick={this.onPause} className="button_test"><img src={this.state.pauseImage} className='video_toolbar_img' alt='#' /></a> {/* <a>, to add pause image */}
+
+                            </div>
+
                         </div>
 
                     </div>
