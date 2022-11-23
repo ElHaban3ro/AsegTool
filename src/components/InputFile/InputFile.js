@@ -14,6 +14,7 @@ export default class InputFile extends React.Component {
 
         super(props);
         this.video = React.createRef();
+        this.videoSource = React.createRef();
         this.timeline = React.createRef();
         
 
@@ -25,9 +26,9 @@ export default class InputFile extends React.Component {
             currentTime: '00:00:00',
             currentSeconds: 0,
             totalTime: '00:00:00',
-            totalSeconds: 100,
+            totalSeconds: 0,
 
-            timeType: null
+            timeType: 'h:m:s'
         }
         
     }
@@ -35,11 +36,20 @@ export default class InputFile extends React.Component {
     handleSelectFile = (e) => {
         // TODO: Hacer que se pueda cambiar de archivo.
         const videoObject = e.target.files[0];
-
+        
         this.setState({
             fileLoad: true,
             videoObject: URL.createObjectURL(videoObject)
+        }, () => {
+            this.video.current.load()
+            this.setState({
+                runningVideo: false,
+                pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
+            })
+
         })
+
+
 
     }  
     
@@ -68,22 +78,33 @@ export default class InputFile extends React.Component {
 
     HandlerVideo = (e) => {
 
-        
-        // CURRENT TIME
-        var dateC = new Date(null)
-        dateC.setSeconds(Math.ceil(this.video.current.currentTime) - 1)
-        
-        
-        // TOTAL SECONDS
-        var dateT = new Date(null)
-        dateT.setSeconds(Math.ceil(this.video.current.duration) - 1) // Time
-        
+
+        if (this.video.current.currentTime === 0){
+            // CURRENT TIME
+            var dateC = new Date(null)
+            dateC.setSeconds(0)
+            
+            
+            // // TOTAL SECONDS
+            var dateT = new Date(null)
+            dateT.setSeconds(0) // Time
+
+        } else {
+            // CURRENT TIME
+            var dateC = new Date(null)
+            dateC.setSeconds(Math.ceil(this.video.current.currentTime) - 1)
+            
+            
+            // TOTAL SECONDS
+            var dateT = new Date(null)
+            dateT.setSeconds(Math.ceil(this.video.current.duration) - 1) // Time
+            
+        }
         
         if (this.video.current.duration >= 3600) { // Hours Range.
             
             var formatCurrentTime = dateC.toISOString().substr(11, 8)
             var formatTotalTime = dateT.toISOString().substr(11, 8)
-
 
             if (formatCurrentTime === '23:59:59'){
                 this.setState({
@@ -99,12 +120,22 @@ export default class InputFile extends React.Component {
             
             
 
-            this.setState({
-                totalTime: formatTotalTime,
-                totalSeconds: Math.ceil(this.video.current.duration),
-                
-                timeType: 'h:m:s'
-            })
+            if (isNaN(this.video.current.duration)){
+                this.setState({
+                    totalTime: formatTotalTime,
+                    totalSeconds: '00:00',
+
+                    timeType: 'm:s'
+                })
+
+            } else {
+                    this.setState({
+                    totalTime: formatTotalTime,
+                    totalSeconds: Math.ceil(this.video.current.duration),
+
+                    timeType: 'm:s'
+                })
+            }
     
             this.timeline.current.value = this.video.current.currentTime
             
@@ -125,14 +156,26 @@ export default class InputFile extends React.Component {
                     currentSeconds: Math.ceil(this.video.current.currentTime) - 1,
                 })
             }
-            this.setState({
-                totalTime: formatTotalTime,
-                totalSeconds: Math.ceil(this.video.current.duration),
 
-                timeType: 'm:s'
-            })
+            if (isNaN(this.video.current.duration)){
+                    this.setState({
+                    totalTime: formatTotalTime,
+                    totalSeconds: '00:00',
+    
+                    timeType: 'm:s'
+                })
+
+            } else {
+                this.setState({
+                    totalTime: formatTotalTime,
+                    totalSeconds: Math.ceil(this.video.current.duration),
+    
+                    timeType: 'm:s'
+                })
+            }
     
             this.timeline.current.value = this.video.current.currentTime
+            
             
         }
             
@@ -213,7 +256,7 @@ export default class InputFile extends React.Component {
                                 
                             <video width='500' controls ref={this.video} onTimeUpdate={this.HandlerVideo} >
 
-                                <source src={this.state.videoObject} />
+                                <source src={this.state.videoObject} ref={this.videoSource} />
 
                             </video>
 
@@ -223,7 +266,6 @@ export default class InputFile extends React.Component {
 
                                 <input type="range" name="timeline" id="timeline" className="timeline" min='0' max={this.state.totalSeconds} onChange={this.HandlerVideoTimeLine} label="Select mp3 or mp4 file" ref={this.timeline} defaultValue='0' />
 
-                                {/* TODO: volume slider */}
 
                                 <input type="range" name="volume_range" id="volume_range" className="volume_range" min='0' max='100' defaultValue='100' onChange={this.HandlerVolume} />
 
