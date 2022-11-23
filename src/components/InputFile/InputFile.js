@@ -34,7 +34,6 @@ export default class InputFile extends React.Component {
     }
     
     handleSelectFile = (e) => {
-        // TODO: Hacer que se pueda cambiar de archivo.
         const videoObject = e.target.files[0];
         
         this.setState({
@@ -243,41 +242,41 @@ export default class InputFile extends React.Component {
             //! TODO: shortcuts to functions!!!!!
 
             <div className="InputFile">
-                <form>
 
-                    <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
+                <div className="video_frame">
+                    {this.state.fileLoad && (
 
-                </form>
+                        <video height='100%' ref={this.video} onTimeUpdate={this.HandlerVideo} >
+
+                            <source src={this.state.videoObject} ref={this.videoSource} />
+
+                        </video>
+
+                    )}                        
+
+                </div>
 
                 {this.state.fileLoad && (
                     <div className="video_div">
-                        
-                        <div className="video_frame">
-                                
-                            <video width='500' controls ref={this.video} onTimeUpdate={this.HandlerVideo} >
-
-                                <source src={this.state.videoObject} ref={this.videoSource} />
-
-                            </video>
-
-                            <div className="buttons_div">
-
-                                <p className="timing">{this.state.currentTime}/{this.state.totalTime}</p>
-
-                                <input type="range" name="timeline" id="timeline" className="timeline" min='0' max={this.state.totalSeconds} onChange={this.HandlerVideoTimeLine} label="Select mp3 or mp4 file" ref={this.timeline} defaultValue='0' />
 
 
-                                <input type="range" name="volume_range" id="volume_range" className="volume_range" min='0' max='100' defaultValue='100' onChange={this.HandlerVolume} />
+                        <div className="buttons_div">
 
-                                <span onClick={this.onPause} className="button_test"><img src={this.state.pauseImage} className='video_toolbar_img' alt='#' /></span>
+                            <p className="timing">{this.state.currentTime}/{this.state.totalTime}</p>
 
-                            </div>
+                            <input type="range" name="timeline" id="timeline" className="timeline" min='0' max={this.state.totalSeconds} onChange={this.HandlerVideoTimeLine} label="Select mp3 or mp4 file" ref={this.timeline} defaultValue='0' />
+
+
+                            <input type="range" name="volume_range" id="volume_range" className="volume_range" min='0' max='100' defaultValue='100' onChange={this.HandlerVolume} />
+
+                            <span onClick={this.onPause} className="button_test"><img src={this.state.pauseImage} className='video_toolbar_img' alt='#' /></span>
 
                         </div>
 
                     </div>
                 )}
 
+                <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
 
             </div>
         )

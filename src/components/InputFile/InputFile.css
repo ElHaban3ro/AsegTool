@@ -1,3 +1,14 @@
 .video_toolbar_img {
     width: 2rem;
 }
+
+
+.video_frame {
+    width: 640px;
+    height: 360px;
+
+    background: #232323;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
