@@ -1,7 +1,7 @@
 import './InputFile.css'
 
 // React imports.
-import React from 'react'
+import React, { Fragment } from 'react'
 
 
 
@@ -33,9 +33,11 @@ export default class InputFile extends React.Component {
 
             datasetEntities: '',
             datasetName: '',
-            textFile: ''
+            textFile: '',
+            datasetListOfEntities: ['a'],
+            listEnt: '',
+            selectEntitie: ''
         }
-        
         
     }
     
@@ -53,8 +55,7 @@ export default class InputFile extends React.Component {
             })
         })
 
-
-
+        
     }  
     
     
@@ -110,6 +111,7 @@ export default class InputFile extends React.Component {
             var formatCurrentTime = dateC.toISOString().substr(11, 8)
             var formatTotalTime = dateT.toISOString().substr(11, 8)
 
+
             if (formatCurrentTime === '23:59:59'){
                 this.setState({
                     currentTime: '00:00:00',
@@ -130,15 +132,32 @@ export default class InputFile extends React.Component {
                     totalSeconds: '00:00',
 
                     timeType: 'm:s'
+                }, () => {
+
+                    this.setState({
+                        textFile: `[${e.target.value}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
+                    }, () => {
+                        this.filearea.current.value = this.state.textFile
+                    })
+
                 })
 
+                
             } else {
                     this.setState({
-                    totalTime: formatTotalTime,
-                    totalSeconds: Math.ceil(this.video.current.duration),
+                        totalTime: formatTotalTime,
+                        totalSeconds: Math.ceil(this.video.current.duration),
 
-                    timeType: 'm:s'
-                })
+                        timeType: 'm:s'
+                    }, () => {
+
+                        this.setState({
+                            textFile: `[${e.target.value}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
+                        }, () => {
+                            this.filearea.current.value = this.state.textFile
+                        })
+    
+                    })
             }
     
             this.timeline.current.value = this.video.current.currentTime
@@ -237,10 +256,10 @@ export default class InputFile extends React.Component {
     }
 
 
+
     HandlerVolume = (e) => {
         this.video.current.volume = e.target.value / 100
     }
-
 
 
 
@@ -250,13 +269,20 @@ export default class InputFile extends React.Component {
     }
 
 
+    HandlerEntitieRadio = (e) => {
+        this.setState({
+            selectEntitie: e.target.value
+        })
+    }
+
+
 
     // Inputs metadata
     datasetName = (e) => {
         
         this.setState({
-            datasetEntities: e.target.value,
-            textFile: `[${this.state.datasetName}][${e.target.value}][${this.state.timeType}]\n\nola`
+            datasetName: e.target.value,
+            textFile: `[${e.target.value}][${this.state.datasetEntities}][${this.state.timeType}]\n\nola`
         }, () => {
             this.filearea.current.value = this.state.textFile
             
@@ -264,20 +290,62 @@ export default class InputFile extends React.Component {
         
     }
     
-    datasetEntities = (e) => {
 
+
+    // return this.state.datasetListOfEntities.map(entitie => {
+        // <option value={entitie}>{entitie}a</option>
+    // })
+
+
+    datasetEntities = (e) => {
         this.setState({
+            datasetListOfEntities: e.target.value.split(','),
             datasetEntities: e.target.value,
             textFile: `[${this.state.datasetName}][${e.target.value}][${this.state.timeType}]\n\nola`
         }, () => {
             this.filearea.current.value = this.state.textFile
+            // console.log(this.state)
+            
+            // var a = (this.state.datasetListOfEntities.map(entitiea => {
+            //     <option value={entitiea}>{entitiea}test</option>
+            // }))
+            
+            const listOfEnt = content_original => {
+                let content = []
+                for (let i in content_original) {
+                    const item = content_original[i]
+                    content.push(<div key={item}>
+
+                                    <input type='radio' name='entitieRadio' value={item} id={item} onChange={this.HandlerEntitieRadio} />
+                                    <label htmlFor={item}> {item} </label>
+
+                                </div>)
+                }
+
+                return content  
+            }
+            
+
+            this.setState({
+
+                listEnt: (<div>
+
+                            {listOfEnt(this.state.datasetListOfEntities)} 
+
+                            {/* <h2>AAAA</h2> */}
+
+                         </div>)
+
+            })
+            
+            
             
         })
-
+        
     }
-    
-    
-    
+
+
+
 
     render() {
         return(
@@ -322,7 +390,7 @@ export default class InputFile extends React.Component {
                 <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
 
 
-                {this.state.fileLoad && (
+                {/* {this.state.fileLoad && ( */}
 
                     <div className="file_dv">
 
@@ -343,7 +411,19 @@ export default class InputFile extends React.Component {
 
                             </div>
 
-                            <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. StartToConfig" >
+
+                            <div className="select_entitie">
+
+                                {/* {this.state.datasetListOfEntities.map(entitie => {
+                                    <option value={entitie}>{entitie}a</option>
+                                })} */}
+
+                                {this.state.listEnt}
+
+
+                            </div>
+
+                            <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
 
 
                             </textarea>
@@ -351,7 +431,7 @@ export default class InputFile extends React.Component {
                         </form>
                     </div>
 
-                )}
+               {/* ) */}
 
             </div>
         )
