@@ -12,3 +12,10 @@
     justify-content: center;
     align-items: center;
 }
+
+
+
+#filesegments {
+    width: 540px;
+    height: 500px;
+}

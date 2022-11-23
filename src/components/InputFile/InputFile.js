@@ -16,7 +16,7 @@ export default class InputFile extends React.Component {
         this.video = React.createRef();
         this.videoSource = React.createRef();
         this.timeline = React.createRef();
-        
+        this.filearea = React.createRef()
 
         this.state = {
             fileLoad: false,
@@ -27,9 +27,15 @@ export default class InputFile extends React.Component {
             currentSeconds: 0,
             totalTime: '00:00:00',
             totalSeconds: 0,
+            
+            timeType: 'h:m:s',
 
-            timeType: 'h:m:s'
+
+            datasetEntities: '',
+            datasetName: '',
+            textFile: ''
         }
+        
         
     }
     
@@ -45,7 +51,6 @@ export default class InputFile extends React.Component {
                 runningVideo: false,
                 pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
             })
-
         })
 
 
@@ -237,6 +242,43 @@ export default class InputFile extends React.Component {
     }
 
 
+
+
+    // Create point
+    HandlerPoint = (e) => {
+        
+    }
+
+
+
+    // Inputs metadata
+    datasetName = (e) => {
+        
+        this.setState({
+            datasetEntities: e.target.value,
+            textFile: `[${this.state.datasetName}][${e.target.value}][${this.state.timeType}]\n\nola`
+        }, () => {
+            this.filearea.current.value = this.state.textFile
+            
+        })
+        
+    }
+    
+    datasetEntities = (e) => {
+
+        this.setState({
+            datasetEntities: e.target.value,
+            textFile: `[${this.state.datasetName}][${e.target.value}][${this.state.timeType}]\n\nola`
+        }, () => {
+            this.filearea.current.value = this.state.textFile
+            
+        })
+
+    }
+    
+    
+    
+
     render() {
         return(
             //! TODO: shortcuts to functions!!!!!
@@ -248,7 +290,7 @@ export default class InputFile extends React.Component {
 
                         <video height='100%' ref={this.video} onTimeUpdate={this.HandlerVideo} >
 
-                            <source src={this.state.videoObject} ref={this.videoSource} />
+                            <source src={this.state.videoObject} ref={this.videoSource} />d
 
                         </video>
 
@@ -257,8 +299,7 @@ export default class InputFile extends React.Component {
                 </div>
 
                 {this.state.fileLoad && (
-                    <div className="video_div">
-
+                    <div className="buttons_main_div">
 
                         <div className="buttons_div">
 
@@ -271,12 +312,46 @@ export default class InputFile extends React.Component {
 
                             <span onClick={this.onPause} className="button_test"><img src={this.state.pauseImage} className='video_toolbar_img' alt='#' /></span>
 
+                            <button onClick={this.HandlerPoint}>Create Point</button>
+
                         </div>
 
                     </div>
                 )}
 
                 <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
+
+
+                {this.state.fileLoad && (
+
+                    <div className="file_dv">
+
+                        <form>
+
+                            <div className="input_config_div">
+
+                                <label htmlFor="datasetName">Select a dataset name</label>
+                                <input type="text" name="datasetName" id="datasetName" onChange={this.datasetName}/>
+
+                            </div>
+
+
+                            <div className="input_config_div">
+
+                                <label htmlFor="entities">Type the entities. Separate by ","</label>
+                                <input type="text" name="entities" id="entities" onChange={this.datasetEntities}/>
+
+                            </div>
+
+                            <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. StartToConfig" >
+
+
+                            </textarea>
+
+                        </form>
+                    </div>
+
+                )}
 
             </div>
         )
