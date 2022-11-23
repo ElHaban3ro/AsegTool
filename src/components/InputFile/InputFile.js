@@ -25,7 +25,9 @@ export default class InputFile extends React.Component {
             currentTime: '00:00:00',
             currentSeconds: 0,
             totalTime: '00:00:00',
-            totalSeconds: 100
+            totalSeconds: 100,
+
+            timeType: null
         }
         
     }
@@ -66,33 +68,83 @@ export default class InputFile extends React.Component {
 
     HandlerVideo = (e) => {
 
-        var date = new Date(null)
-        date.setSeconds(Math.ceil(this.video.current.currentTime) - 1)
-        var formatCurrentTime = date.toISOString().substr(11, 8)
-        if (formatCurrentTime === '23:59:59'){
+        
+        // CURRENT TIME
+        var dateC = new Date(null)
+        dateC.setSeconds(Math.ceil(this.video.current.currentTime) - 1)
+        
+        
+        // TOTAL SECONDS
+        var dateT = new Date(null)
+        dateT.setSeconds(Math.ceil(this.video.current.duration) - 1) // Time
+        
+        
+        if (this.video.current.duration >= 3600) { // Hours Range.
+            
+            var formatCurrentTime = dateC.toISOString().substr(11, 8)
+            var formatTotalTime = dateT.toISOString().substr(11, 8)
+
+
+            if (formatCurrentTime === '23:59:59'){
+                this.setState({
+                    currentTime: '00:00:00',
+                    currentSeconds: 0
+                })
+            } else {
+                this.setState({
+                    currentTime: formatCurrentTime,
+                    currentSeconds: Math.ceil(this.video.current.currentTime) - 1,
+                })
+            }
+            
+            
+
             this.setState({
-                currentTime: '00:00:00',
-                currentSeconds: 0
+                totalTime: formatTotalTime,
+                totalSeconds: Math.ceil(this.video.current.duration),
+                
+                timeType: 'h:m:s'
             })
-        } else {
+    
+            this.timeline.current.value = this.video.current.currentTime
+            
+
+        } else { // Minutes range
+            
+            var formatCurrentTime = dateC.toISOString().substr(14, 5)
+            var formatTotalTime = dateT.toISOString().substr(14, 5)
+
+            if (formatCurrentTime === '59:59'){
+                this.setState({
+                    currentTime: '00:00',
+                    currentSeconds: 0
+                })
+            } else {
+                this.setState({
+                    currentTime: formatCurrentTime,
+                    currentSeconds: Math.ceil(this.video.current.currentTime) - 1,
+                })
+            }
             this.setState({
-                currentTime: formatCurrentTime,
-                currentSeconds: Math.ceil(this.video.current.currentTime) - 1,
+                totalTime: formatTotalTime,
+                totalSeconds: Math.ceil(this.video.current.duration),
+
+                timeType: 'm:s'
+            })
+    
+            this.timeline.current.value = this.video.current.currentTime
+            
+        }
+            
+
+
+        if (this.video.current.duration === this.video.current.currentTime) {
+            this.setState({
+                runningVideo: false,
+                pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
             })
         }
 
-
-            
-        var date = new Date(null)
-        date.setSeconds(Math.ceil(this.video.current.duration) - 1)
-        var formatTotalTime = date.toISOString().substr(11, 8)
-        this.setState({
-            totalTime: formatTotalTime,
-            totalSeconds: Math.ceil(this.video.current.duration)
-        })
-
-        this.timeline.current.value = this.video.current.currentTime
-        
 
     }
 
@@ -101,24 +153,52 @@ export default class InputFile extends React.Component {
 
         var date = new Date(null)
         date.setSeconds(Math.ceil(e.target.value) - 1)
-        var formatCurrentTime = date.toISOString().substr(11, 8)
-        if (formatCurrentTime === '23:59:59'){
-            this.setState({
-                currentTime: '00:00:00',
-                currentSeconds: 0
-            })
+
+
+        if (this.video.current.duration >= 3600) {
+
+            var formatCurrentTime = date.toISOString().substr(11, 8)
+            if (formatCurrentTime === '23:59:59'){
+                this.setState({
+                    currentTime: '00:00:00',
+                    currentSeconds: 0
+                })
+            } else {
+                this.setState({
+                    currentTime: formatCurrentTime,
+                    currentSeconds: Math.ceil(e.target.value) - 1,
+                })
+            }
+            
         } else {
-            this.setState({
-                currentTime: formatCurrentTime,
-                currentSeconds: Math.ceil(e.target.value) - 1,
-            })
+            
+            var formatCurrentTime = date.toISOString().substr(14, 5)
+            if (formatCurrentTime === '59:59'){
+                this.setState({
+                    currentTime: '00:00',
+                    currentSeconds: 0
+                })
+            } else {
+                this.setState({
+                    currentTime: formatCurrentTime,
+                    currentSeconds: Math.ceil(e.target.value) - 1,
+                })
+            }
+            
+
         }
     }
 
 
+    HandlerVolume = (e) => {
+        this.video.current.volume = e.target.value / 100
+    }
+
 
     render() {
         return(
+            //! TODO: shortcuts to functions!!!!!
+
             <div className="InputFile">
                 <form>
 
@@ -143,7 +223,11 @@ export default class InputFile extends React.Component {
 
                                 <input type="range" name="timeline" id="timeline" className="timeline" min='0' max={this.state.totalSeconds} onChange={this.HandlerVideoTimeLine} label="Select mp3 or mp4 file" ref={this.timeline} defaultValue='0' />
 
-                                <a onClick={this.onPause} className="button_test"><img src={this.state.pauseImage} className='video_toolbar_img' alt='#' /></a> {/* <a>, to add pause image */}
+                                {/* TODO: volume slider */}
+
+                                <input type="range" name="volume_range" id="volume_range" className="volume_range" min='0' max='100' defaultValue='100' onChange={this.HandlerVolume} />
+
+                                <span onClick={this.onPause} className="button_test"><img src={this.state.pauseImage} className='video_toolbar_img' alt='#' /></span>
 
                             </div>
 
