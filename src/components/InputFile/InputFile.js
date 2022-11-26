@@ -30,9 +30,11 @@ export default class InputFile extends React.Component {
             totalSeconds: 0,
             
             timeType: 'h:m:s',
-
+        
+            viewFile: '',
 
             datasetEntities: '',
+            selectedEntitie: false,
             datasetName: '',
             textFile: '',
             datasetListOfEntities: ['a'],
@@ -125,7 +127,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -138,7 +146,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -157,7 +171,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -174,7 +194,13 @@ export default class InputFile extends React.Component {
                         this.setState({
                             textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                         }, () => {
-                            this.filearea.current.value = this.state.textFile
+                            this.setState({
+                                viewFile: this.state.textFile + this.state.body
+                            }, () => {
+                                
+                                this.filearea.current.value = this.state.viewFile
+                
+                            })
                         })
     
                     })
@@ -198,7 +224,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -211,7 +243,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -228,7 +266,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -244,7 +288,13 @@ export default class InputFile extends React.Component {
                     this.setState({
                         textFile: `[${this.state.datasetName}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
                     }, () => {
-                        this.filearea.current.value = this.state.textFile
+                        this.setState({
+                            viewFile: this.state.textFile + this.state.body
+                        }, () => {
+                            
+                            this.filearea.current.value = this.state.viewFile
+            
+                        })
                     })
 
                 })
@@ -318,29 +368,45 @@ export default class InputFile extends React.Component {
 
     // Create point
     HandlerStartPoint = (e) => {
-        e.preventDefault()
 
-        
+        e.preventDefault()
         this.setState({
-            body: `! ${this.state.selectEntitie}\n- ${this.state.currentTime} > `,
-            selecting: TextTrackCue
-        }, () => {
-            this.tparea.current.value = this.state.body
+            tempPoint: `! ${this.state.selectEntitie}\n- ${this.state.currentTime} > `,
+            selecting: true
         })
         
-
     }
-
+    
 
     HandlerCreatePoint = (e) => {
         e.preventDefault()
         
+        this.setState({
+            tempPoint: this.state.tempPoint + `${this.state.currentTime}\n\n`,
+            selecting: false
+        }, () => {
+            this.setState({
+                body: this.state.body + this.state.tempPoint,
+                tempPoint: ''
+            }, () => {
+                this.setState({
+
+                    viewFile: this.state.textFile + this.state.body
+
+                }, () => {
+
+                    this.filearea.current.value = this.state.viewFile
+
+                })
+            })
+        })
     }
 
     
     HandlerEntitieRadio = (e) => {
 
         this.setState({
+            selectedEntitie: true,
             selectEntitie: e.target.value
         })
     }
@@ -354,8 +420,13 @@ export default class InputFile extends React.Component {
             datasetName: e.target.value,
             textFile: `[${e.target.value}][${this.state.datasetEntities}][${this.state.timeType}]\n\n`
         }, () => {
-            this.filearea.current.value = this.state.textFile
-            
+            this.setState({
+                viewFile: this.state.textFile + this.state.body
+            }, () => {
+                
+                this.filearea.current.value = this.state.viewFile
+
+            })
         })
         
     }
@@ -372,7 +443,6 @@ export default class InputFile extends React.Component {
         }
 
         this.setState({
-            
             datasetListOfEntities: LoE,
             
             
@@ -381,7 +451,13 @@ export default class InputFile extends React.Component {
             datasetEntities: e.target.value,
             textFile: `[${this.state.datasetName}][${e.target.value}][${this.state.timeType}]\n\n`
         }, () => {
-            this.filearea.current.value = this.state.textFile
+            this.setState({
+                viewFile: this.state.textFile + this.state.body
+            }, () => {
+                
+                this.filearea.current.value = this.state.viewFile
+
+            })
             
             const listOfEnt = content_original => {
                 let content = []
@@ -462,7 +538,7 @@ export default class InputFile extends React.Component {
                 <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
 
 
-                {/* {this.state.fileLoad && ( */}
+                {this.state.fileLoad && (
 
                     <div className="file_dv">
 
@@ -504,7 +580,7 @@ export default class InputFile extends React.Component {
 
                             </div>
 
-
+                            {/* TODO: Arreglar el bug del text area del point */}
                             <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} readOnly ></textarea>
                             <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
 
@@ -514,7 +590,7 @@ export default class InputFile extends React.Component {
                         </form>
                     </div>
 
-               {/* ) */}
+               )}
 
             </div>
         )
