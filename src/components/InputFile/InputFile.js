@@ -2,7 +2,7 @@ import './InputFile.css'
 
 // React imports.
 import React, { Fragment } from 'react'
-
+import { HotKeys, GlobalHotKeys } from 'react-hotkeys';
 
 
 
@@ -10,9 +10,38 @@ import React, { Fragment } from 'react'
 
 export default class InputFile extends React.Component {
     
+    pauseHandler = () => {
+        console.log('PAUSEEE')
+    }
+    
     constructor(props) {
-
+        
         super(props);
+        
+        this.preventDefaultHandlers = (handlers) => {
+            const newHandlers = {}
+
+            for (const [action, handler] of Object.entries(handlers)) {
+                newHandlers[action] = (event) => {
+                    if (event) {
+                        event.preventDefault();
+                    }
+                    handler()
+                }
+            }
+            return newHandlers
+        }
+
+        
+        this.shortcuts = {
+            PLAY_PAUSE: 'space'
+        }
+
+        this.short_actions = this.preventDefaultHandlers({
+            PLAY_PAUSE: this.onPause
+        })
+
+
         this.video = React.createRef();
         this.videoSource = React.createRef();
         this.timeline = React.createRef();
@@ -500,7 +529,10 @@ export default class InputFile extends React.Component {
         return(
             //! TODO: shortcuts to functions!!!!!
 
-            <div className="InputFile">
+
+            <div className="InputFile"> 
+                
+                <GlobalHotKeys keyMap={this.shortcuts} handlers={this.short_actions} />
 
                 <div className="video_frame">
                     {this.state.fileLoad && (
@@ -579,8 +611,6 @@ export default class InputFile extends React.Component {
                                 )}
 
                             </div>
-
-                            {/* TODO: Arreglar el bug del text area del point */}
                             <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} readOnly ></textarea>
                             <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
 
