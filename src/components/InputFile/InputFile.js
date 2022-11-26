@@ -10,10 +10,6 @@ import { HotKeys, GlobalHotKeys } from 'react-hotkeys';
 
 export default class InputFile extends React.Component {
     
-    pauseHandler = () => {
-        console.log('PAUSEEE')
-    }
-    
     constructor(props) {
         
         super(props);
@@ -34,11 +30,19 @@ export default class InputFile extends React.Component {
 
         
         this.shortcuts = {
-            PLAY_PAUSE: 'space'
+            PLAY_PAUSE: 'space',
+            POINT: 'up',
+
+            NEXT_S: 'right',
+            PREV_S: 'left'
         }
 
         this.short_actions = this.preventDefaultHandlers({
-            PLAY_PAUSE: this.onPause
+            PLAY_PAUSE: this.onPause,
+            POINT: this.handlerPointShortcut,
+
+            NEXT_S: this.nextSecond,
+            PREV_S: this.prevSecond
         })
 
 
@@ -75,6 +79,27 @@ export default class InputFile extends React.Component {
         }
         
     }
+
+
+    
+    handlerPointShortcut = () => {
+        if (this.state.selecting) {
+            this.HandlerCreatePoint()
+        } else {
+            this.HandlerStartPoint()
+        }
+    }
+    
+
+    nextSecond = () => {
+        this.video.current.currentTime = this.video.current.currentTime + 1
+    }
+
+    prevSecond = () => {
+        this.video.current.currentTime = this.video.current.currentTime - 1
+    }
+
+
     
     handleSelectFile = (e) => {
         const videoObject = e.target.files[0];
@@ -398,7 +423,10 @@ export default class InputFile extends React.Component {
     // Create point
     HandlerStartPoint = (e) => {
 
-        e.preventDefault()
+        if (e) {
+            e.preventDefault()
+        }
+
         this.setState({
             tempPoint: `! ${this.state.selectEntitie}\n- ${this.state.currentTime} > `,
             selecting: true
@@ -408,7 +436,9 @@ export default class InputFile extends React.Component {
     
 
     HandlerCreatePoint = (e) => {
-        e.preventDefault()
+        if (e) {
+            e.preventDefault()
+        }
         
         this.setState({
             tempPoint: this.state.tempPoint + `${this.state.currentTime}\n\n`,
@@ -532,7 +562,6 @@ export default class InputFile extends React.Component {
 
             <div className="InputFile"> 
                 
-                <GlobalHotKeys keyMap={this.shortcuts} handlers={this.short_actions} />
 
                 <div className="video_frame">
                     {this.state.fileLoad && (
@@ -571,8 +600,10 @@ export default class InputFile extends React.Component {
 
 
                 {this.state.fileLoad && (
-
+                    
                     <div className="file_dv">
+
+                        <GlobalHotKeys keyMap={this.shortcuts} handlers={this.short_actions} />
 
                         <form>
 
