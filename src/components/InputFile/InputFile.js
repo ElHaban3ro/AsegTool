@@ -459,11 +459,11 @@ export default class InputFile extends React.Component {
                 }, () => {
 
                     this.filearea.current.value = this.state.viewFile
+                
                     
                     const file_download = new Blob([this.state.viewFile], {type: 'text/plain;charset=utf-8'})
-                    console.log(file_download)
+
                     const url_download = URL.createObjectURL(file_download)
-                    console.log(url_download)
                     this.setState({
                         download_url_bool: true,
                         download_url: url_download
@@ -554,8 +554,6 @@ export default class InputFile extends React.Component {
                 listEnt: (<div>
 
                             {listOfEnt(this.state.datasetListOfEntities)} 
-
-                            {/* <h2>AAAA</h2> */}
 
                          </div>)
 
@@ -676,8 +674,9 @@ export default class InputFile extends React.Component {
                                 {/* TODO: GENERAR ARCHIVO DESCARGABLE. Mirar diferentes enfoques. Aún no se cómo hacerlo. */}
 
                                 {this.state.download_url_bool && (
-                                    <Link to={this.state.download_url}  download >Download File</Link>
-                                )}
+                                    
+                                    <a href={this.state.download_url} download='Thanks To!.aseg' className='downloadButton'>Download your file</a>
+                                    )}
 
                             </form>
                         </div>

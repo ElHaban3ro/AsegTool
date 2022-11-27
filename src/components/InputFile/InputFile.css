@@ -184,6 +184,7 @@ video {
     background: #14140713;
     border: 3px #232323 solid;
     padding: 1rem;
+    padding-bottom: 2rem;
     border-radius: 10px;
 }
 
@@ -351,10 +352,39 @@ label {
     border-radius: 5px;
 
     padding: 1rem;
+    margin-bottom: 2rem;
 }
 
 
 
 #temp_point, #filesegments {
     font-family: 'PT Sans Caption', sans-serif;
+}
+
+
+
+
+.downloadButton {
+    border: 3px solid #232323;
+    padding: .5rem 1rem;
+    margin-top: 2rem;
+    background:rgb(182, 180, 65);
+    color: #1b1b1b;
+    text-decoration: none;
+    font-family: 'PT Sans Caption', sans-serif;
+    font-weight: bolder;
+    border-radius: 15px;
+}
+
+
+.downloadButton:hover {
+    background:rgb(128, 126, 45);
+
+}
+
+
+@media screen and (max-width: 270px) {
+    .downloadButton{
+        font-size: 12px;
+    }
 }
