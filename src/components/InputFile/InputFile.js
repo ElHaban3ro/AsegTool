@@ -581,7 +581,7 @@ export default class InputFile extends React.Component {
 
                             <div className="time_volume_div">
 
-                                <p className="timing">{this.state.currentTime}/{this.state.totalTime}</p>
+                                <p className="timing">{this.state.currentTime} / {this.state.totalTime}</p>
 
                                 <input type="range" name="volume_range" id="volume_range" className="volume_range" min='0' max='100' defaultValue='100' onChange={this.HandlerVolume} />
 
@@ -605,63 +605,63 @@ export default class InputFile extends React.Component {
 
                     <input type="file" name="content" id="content" label='Select mp3 or mp4 file' onChange={this.handleSelectFile} accept='video/mp4, audio/mp3' />
 
+                    {this.state.fileLoad && (
+                        
+                        <div className="file_dv">
+
+                            <GlobalHotKeys keyMap={this.shortcuts} handlers={this.short_actions} />
+
+                            <form>
+
+                                <div className="input_config_div">
+
+                                    <label htmlFor="datasetName">Select a dataset name</label>
+                                    <input type="text" name="datasetName" id="datasetName" onChange={this.datasetName} required />
+
+                                </div>
+
+
+                                <div className="input_config_div">
+
+                                    <label htmlFor="entities">Type the entities. Separate by ","</label>
+                                    <input type="text" name="entities" id="entities" onChange={this.datasetEntities} required />
+
+                                </div>
+
+
+                                <div className="select_entitie">
+
+                                    {this.state.listEnt}
+
+                                </div>
+
+                                <div className="tools_div">
+
+
+                                    {this.state.selecting ? (
+                                        
+                                        <button onClick={this.HandlerCreatePoint}>Create Point</button>
+                                    
+                                    ) : (
+                                            
+                                        <button onClick={this.HandlerStartPoint}>Start Point</button>
+                                    )}
+
+                                </div>
+                                <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} readOnly ></textarea>
+                                <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
+
+
+                                </textarea>
+
+                            </form>
+                        </div>
+
+                    )}
+
 
                 </div>
 
-
-                {this.state.fileLoad && (
-                    
-                    <div className="file_dv">
-
-                        <GlobalHotKeys keyMap={this.shortcuts} handlers={this.short_actions} />
-
-                        <form>
-
-                            <div className="input_config_div">
-
-                                <label htmlFor="datasetName">Select a dataset name</label>
-                                <input type="text" name="datasetName" id="datasetName" onChange={this.datasetName} required />
-
-                            </div>
-
-
-                            <div className="input_config_div">
-
-                                <label htmlFor="entities">Type the entities. Separate by ","</label>
-                                <input type="text" name="entities" id="entities" onChange={this.datasetEntities} required />
-
-                            </div>
-
-
-                            <div className="select_entitie">
-
-                                {this.state.listEnt}
-
-                            </div>
-
-                            <div className="tools_div">
-
-
-                                {this.state.selecting ? (
-                                    
-                                    <button onClick={this.HandlerCreatePoint}>Create Point</button>
-                                
-                                ) : (
-                                        
-                                    <button onClick={this.HandlerStartPoint}>Start Point</button>
-                                )}
-
-                            </div>
-                            <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} readOnly ></textarea>
-                            <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
-
-
-                            </textarea>
-
-                        </form>
-                    </div>
-
-               )}
 
             </div>
         )
