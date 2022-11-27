@@ -644,15 +644,17 @@ export default class InputFile extends React.Component {
 
                                     {this.state.selecting ? (
                                         
-                                        <button onClick={this.HandlerCreatePoint}>Create Point</button>
+                                        <button onClick={this.HandlerCreatePoint} className='pointButton'>Create Point</button>
                                     
                                     ) : (
                                             
-                                        <button onClick={this.HandlerStartPoint}>Start Point</button>
+                                        <button onClick={this.HandlerStartPoint} className='pointButton'>Start Point</button>
                                     )}
 
                                 </div>
-                                <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} readOnly ></textarea>
+
+
+                                <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} placeholder='00:09 > 20:05' readOnly ></textarea>
                                 <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
 
 
