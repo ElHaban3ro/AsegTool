@@ -523,8 +523,8 @@ export default class InputFile extends React.Component {
                     const item = content_original[i]
                     content.push(<div key={item}>
 
-                                    <input type='radio' name='entitieRadio' value={item} id={item} onChange={this.HandlerEntitieRadio} />
-                                    <label htmlFor={item}> {item} </label>
+                                    <input type='radio' name='entitieRadio' value={item} id={item} onChange={this.HandlerEntitieRadio} className='entitiesRadio' />
+                                    <label htmlFor={item} className='labelEntities'> {item} </label>
 
                                 </div>)
                 }
@@ -612,21 +612,25 @@ export default class InputFile extends React.Component {
                             <GlobalHotKeys keyMap={this.shortcuts} handlers={this.short_actions} />
 
                             <form>
+                                <div className="inputs_info_div">
 
-                                <div className="input_config_div">
+                                    <div className="input_config_div">
 
-                                    <label htmlFor="datasetName">Select a dataset name</label>
-                                    <input type="text" name="datasetName" id="datasetName" onChange={this.datasetName} required />
+                                        <label htmlFor="datasetName">Dataset name: </label>
+                                        <input type="text" name="datasetName" id="datasetName" onChange={this.datasetName} required />
 
+                                    </div>
+
+
+                                    <div className="input_config_div">
+
+                                        <label htmlFor="entities">Entities separated by commas: </label>
+                                        <input type="text" name="entities" id="entities" onChange={this.datasetEntities} required />
+
+                                    </div>
+                                    
                                 </div>
-
-
-                                <div className="input_config_div">
-
-                                    <label htmlFor="entities">Type the entities. Separate by ","</label>
-                                    <input type="text" name="entities" id="entities" onChange={this.datasetEntities} required />
-
-                                </div>
+                                
 
 
                                 <div className="select_entitie">
