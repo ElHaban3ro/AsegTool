@@ -7,6 +7,11 @@ import { Link } from 'react-router-dom';
 
 
 
+// Images.
+import pauseImage from './imgs/pause.svg'
+import playImage from './imgs/play.svg'
+
+
 
 export default class InputFile extends React.Component {
     
@@ -56,7 +61,7 @@ export default class InputFile extends React.Component {
             fileLoad: false,
             videoObject: null,
             runningVideo: false,
-            pauseImage: "https://www.pngarts.com/files/2/Play-PNG-Download-Image.png",
+            pauseImage: playImage,
             currentTime: '00:00:00',
             currentSeconds: 0,
             totalTime: '00:00:00',
@@ -116,7 +121,7 @@ export default class InputFile extends React.Component {
             this.video.current.load()
             this.setState({
                 runningVideo: false,
-                pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
+                pauseImage: playImage
             })
         })
 
@@ -130,7 +135,7 @@ export default class InputFile extends React.Component {
             this.video.current.play()
             this.setState({
                 runningVideo: true,
-                pauseImage: "https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-pause-512.png"
+                pauseImage: pauseImage
             })
             
         } else {
@@ -138,7 +143,7 @@ export default class InputFile extends React.Component {
             this.video.current.pause()
             this.setState({
                 runningVideo: false,
-                pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
+                pauseImage: playImage
             })
             
         }
@@ -368,7 +373,7 @@ export default class InputFile extends React.Component {
         if (this.video.current.duration === this.video.current.currentTime) {
             this.setState({
                 runningVideo: false,
-                pauseImage: 'https://www.pngarts.com/files/2/Play-PNG-Download-Image.png'
+                pauseImage: playImage
             })
         }
 
