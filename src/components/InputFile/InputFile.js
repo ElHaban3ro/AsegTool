@@ -3,7 +3,7 @@ import './InputFile.css'
 // React imports.
 import React, { Fragment } from 'react'
 import { HotKeys, GlobalHotKeys } from 'react-hotkeys';
-
+import { Link } from 'react-router-dom';
 
 
 
@@ -75,7 +75,10 @@ export default class InputFile extends React.Component {
             selectEntitie: '',
             selecting: false,
             body: '',
-            tempPoint: ''
+            tempPoint: '',
+            
+            download_url_bool: false,
+            download_url: ''
         }
         
     }
@@ -101,6 +104,8 @@ export default class InputFile extends React.Component {
 
 
     
+
+
     handleSelectFile = (e) => {
         const videoObject = e.target.files[0];
         
@@ -430,7 +435,7 @@ export default class InputFile extends React.Component {
             tempPoint: `! ${this.state.selectEntitie}\n- ${this.state.currentTime} > `,
             selecting: true
         })
-        
+
     }
     
 
@@ -454,11 +459,22 @@ export default class InputFile extends React.Component {
                 }, () => {
 
                     this.filearea.current.value = this.state.viewFile
-
+                    
+                    const file_download = new Blob([this.state.viewFile], {type: 'text/plain;charset=utf-8'})
+                    console.log(file_download)
+                    const url_download = URL.createObjectURL(file_download)
+                    console.log(url_download)
+                    this.setState({
+                        download_url_bool: true,
+                        download_url: url_download
+                    })
                 })
             })
         })
     }
+
+
+    
 
     
     HandlerEntitieRadio = (e) => {
@@ -655,10 +671,13 @@ export default class InputFile extends React.Component {
 
 
                                 <textarea name="temp_point" id="temp_point" ref={this.tparea} value={this.state.tempPoint} placeholder='00:09 > 20:05' readOnly ></textarea>
-                                <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." >
+                                <textarea name="filesegments" id="filesegments" ref={this.filearea} defaultValue="Nothing Here. Start to config." ></textarea>
 
+                                {/* TODO: GENERAR ARCHIVO DESCARGABLE. Mirar diferentes enfoques. Aún no se cómo hacerlo. */}
 
-                                </textarea>
+                                {this.state.download_url_bool && (
+                                    <Link to={this.state.download_url}  download >Download File</Link>
+                                )}
 
                             </form>
                         </div>

@@ -245,6 +245,7 @@ video {
     border-radius: 5px;
     border: 3px solid #232323;
     flex-wrap: wrap;
+    user-select: none;
 }
 
 #datasetName, #entities {
@@ -283,6 +284,7 @@ label {
     user-select: none;
     cursor: pointer;
     font-size: 18px;
+    color: white;
 }
 
 
@@ -293,6 +295,7 @@ label {
 
 .pointButton {
 
+    user-select: none;
     width: -webkit-fill-available;
     padding: .5rem 1.5rem;
     font-family: 'PT Sans Caption', sans-serif;
@@ -325,6 +328,10 @@ label {
 }
 
 
+#temp_point::placeholder {
+    user-select: none;
+}
+
 
 .file_dv {
     width: 100%;
@@ -346,3 +353,8 @@ label {
     padding: 1rem;
 }
 
+
+
+#temp_point, #filesegments {
+    font-family: 'PT Sans Caption', sans-serif;
+}
