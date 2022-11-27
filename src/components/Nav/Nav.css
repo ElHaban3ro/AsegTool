@@ -1,0 +1,16 @@
+.nav {
+    background: #232323;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    height: 3rem;
+}
+
+
+h1 {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-weight: 100;
+    color: rgb(250, 235, 215);
+    user-select: none;
+}
